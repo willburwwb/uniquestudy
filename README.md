@@ -8,3 +8,6 @@
 ## day 3-4
 昨天白天有点事，晚上开始学习，然后忘记提交了（
 这两天主要复习了git，在archlinux下用bash-it配置了一下bash，然后学习了shell编程，和构建工具，晚上下载了docker，开始了解docker。
+
+## day 5
+今天主要学习了docker的用法，关于docker的镜像容器的相关命令，和dockerfile，然后看了下Go语言入门书籍。
