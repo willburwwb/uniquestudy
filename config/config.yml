@@ -1,0 +1,8 @@
+postgresql:
+  host: 127.0.0.1
+  port: 5432
+  user: postgres
+  password: wwb20030526
+  dbname: test
+redis:
+  host: 127.0.0.1:6379
