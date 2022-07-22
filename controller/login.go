@@ -9,9 +9,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func checkToken() {
-	
-}
 func Login(context *gin.Context) {
 	db := database.GetDB()
 	name := context.Query("name")
