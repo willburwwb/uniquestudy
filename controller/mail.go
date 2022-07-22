@@ -50,7 +50,7 @@ func GetEmail(context *gin.Context) {
 		return
 	}
 	rdb := database.GetRdb()
-	err = rdb.Set(email, randcode, time.Minute*3).Err()
+	err = rdb.Set(email, randcode, time.Minute*10).Err()
 	if err != nil {
 		log.Println("Set redis failed", err)
 		context.JSON(http.StatusBadRequest, gin.H{

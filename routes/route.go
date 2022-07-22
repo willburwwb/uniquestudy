@@ -14,8 +14,8 @@ func InitRouter() *gin.Engine {
 		user.GET("/login", controller.Login)
 		user.POST("/email", controller.GetEmail)
 		user.POST("/register", controller.Register)
+		user.POST("/getLostPasswd", controller.GetLostPasswd)
 	}
-
 	engine.POST("/", middleware.JWT())
 	return engine
 }
