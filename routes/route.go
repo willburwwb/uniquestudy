@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"log"
 	"test/controller"
 	"test/middleware"
 
@@ -17,8 +16,6 @@ func InitRouter() *gin.Engine {
 		user.POST("/register", controller.Register)
 	}
 
-	engine.POST("/", middleware.JWT(), func(ctx *gin.Context) {
-		log.Println("中间件检验   成功")
-	})
+	engine.POST("/", middleware.JWT())
 	return engine
 }
