@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"encoding/base64"
 	"log"
 	"net/http"
 	"test/database"
@@ -12,13 +11,6 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-func base64Encode(password []byte) []byte {
-	return []byte(base64.StdEncoding.EncodeToString(password))
-}
-
-// func base64Decode(src []byte) ([]byte, error) {
-//     return base64.StdEncoding.DecodeString(string(src))
-// }
 func Register(context *gin.Context) {
 	db := database.GetDB()
 	rdb := database.GetRdb()
@@ -44,18 +36,19 @@ func Register(context *gin.Context) {
 			"code":    400,
 			"message": "the email has been used",
 		})
+		return
 	}
 
-	base64Password := base64Encode([]byte(password))
+	base64Password := Encode(password)
 
 	user := model.User{
 		Name:     name,
-		Password: string(base64Password),
+		Password: base64Password,
 		Email:    email,
 	}
 
 	db.Create(&user)
-	log.Println("insert a new user", name, string(base64Password), email)
+	log.Println("insert a new user", name, base64Password, email)
 	context.JSON(http.StatusAccepted, gin.H{
 		"status":  200,
 		"message": "insert a new user",
