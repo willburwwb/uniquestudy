@@ -34,7 +34,12 @@ func InitDb() *gorm.DB {
 		panic("connect postgres failed   " + err.Error())
 	}
 	DB = db
-	db.CreateTable(&model.User{})
+	if !db.HasTable(&model.User{}) {
+		db.CreateTable(&model.User{})
+	}
+	if !db.HasTable(&model.Post{}) {
+		db.CreateTable(&model.Post{})
+	}
 	log.Println("connect postgres successfully")
 	return db
 }

@@ -3,7 +3,7 @@ package middleware
 import (
 	"net/http"
 	"strings"
-	"test/controller"
+	"test/controller/user"
 
 	"github.com/gin-gonic/gin"
 )
