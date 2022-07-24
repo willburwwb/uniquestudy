@@ -40,6 +40,12 @@ func InitDb() *gorm.DB {
 	if !db.HasTable(&model.Post{}) {
 		db.CreateTable(&model.Post{})
 	}
+	if !db.HasTable(&model.Comment{}) {
+		db.CreateTable(&model.Comment{})
+	}
+	if !db.HasTable(&model.Nick{}) {
+		db.CreateTable(&model.Nick{})
+	}
 	log.Println("connect postgres successfully")
 	return db
 }

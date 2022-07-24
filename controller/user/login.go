@@ -11,8 +11,8 @@ import (
 
 func Login(context *gin.Context) {
 	db := database.GetDB()
-	name := context.Query("name")
-	password := context.Query("password")
+	name := context.PostForm("name")
+	password := context.PostForm("password")
 	password = Encode(password)
 	var user model.User
 	db.Where("name = ?", name).First(&user)

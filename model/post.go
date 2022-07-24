@@ -12,10 +12,3 @@ type Post struct {
 	Content  string `form:"content" binding:"required"`
 	Nickname string
 }
-
-type PostDetails struct {
-	Vote     uint64
-	Title    string
-	Content  string
-	Nickname string
-}

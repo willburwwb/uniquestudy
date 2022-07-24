@@ -6,6 +6,4 @@ import (
 
 func Vote(context *gin.Context) {
 
-
-	
 }

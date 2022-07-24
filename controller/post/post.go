@@ -2,6 +2,7 @@ package post
 
 import (
 	"log"
+	"math/rand"
 	"net/http"
 	"strconv"
 	"test/database"
@@ -17,8 +18,18 @@ func getUserID(name string) uint {
 	db.Where("name=?", name).First(&user)
 	return user.ID
 }
-func setNickname() string {
-	return "aaaaa"
+
+var letters = []rune("0123456789")
+
+func init() {
+	rand.Seed(time.Now().UnixNano())
+}
+func SetNickname() string {
+	b := make([]rune, 6)
+	for i := range b {
+		b[i] = letters[rand.Intn(len(letters))]
+	}
+	return string(b)
 }
 func CreatPost(context *gin.Context) {
 	var post model.Post
@@ -39,24 +50,58 @@ func CreatPost(context *gin.Context) {
 		})
 		return
 	}
-	post.Nickname = setNickname()
+	post.Nickname = SetNickname()
 	post.Vote = 0
-	database.CreatPost(&post)
+	db := database.GetDB()
+	if err := db.Create(post).Error; err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{
+			"status":  400,
+			"message": "数据创建失败",
+		})
+	}
 	context.JSON(http.StatusOK, gin.H{
 		"status":  400,
 		"message": "发布帖子成功",
 	})
 }
 func DeletePost(context *gin.Context) {
-	postid := context.Param("id")
+	postid, err := strconv.Atoi(context.Param("id"))
+	if err != nil || postid == 0 {
+		context.JSON(http.StatusBadRequest, gin.H{
+			"status":  400,
+			"message": "参数错误",
+		})
+		return
+	}
 	db := database.GetDB()
 	var post model.Post
 	db.Where("id=?", postid).First(&post)
-	database.DeletePost(&post)
+
+	if err := db.Delete(post).Error; err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{
+			"status":  400,
+			"message": "数据删除失败",
+		})
+		return
+	}
 	context.JSON(http.StatusOK, gin.H{
 		"status":  200,
 		"message": "删除帖子成功",
 	})
+	err = db.Where("post_id=?", postid).Delete(&model.Comment{}).Error
+	if err != nil {
+		context.JSON(http.StatusOK, gin.H{
+			"status":  400,
+			"message": err,
+		})
+	}
+	err = db.Where("post_id=?", postid).Delete(&model.Nick{}).Error
+	if err != nil {
+		context.JSON(http.StatusOK, gin.H{
+			"status":  400,
+			"message": err,
+		})
+	}
 }
 
 func GetPostsByTitle(context *gin.Context) {
@@ -123,6 +168,7 @@ func UpdatePost(context *gin.Context) {
 			"status":  400,
 			"message": "该帖子不存在",
 		})
+		return
 	}
 	if title != "" {
 		post.Title = title
